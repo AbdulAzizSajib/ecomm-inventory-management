@@ -1,0 +1,38 @@
+# Apache config for Next.js static export served under /inventorypanel
+# Place this file inside the inventorypanel folder (Next copies it from public/).
+
+# Don't expose directory listings (the export creates folders next to .html files
+# for RSC prefetch payloads — without this, refreshes show "Index of ...").
+Options -Indexes
+
+# Don't auto-redirect /route -> /route/ when a same-named directory exists.
+DirectorySlash Off
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /inventorypanel/
+
+  # 1. Real files (assets in _next/, images, RSC .txt payloads, etc.) are served as-is.
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
+
+  # 2. Clean URL: /route or /route/ -> /route.html when that file exists.
+  RewriteCond %{DOCUMENT_ROOT}/inventorypanel/$1.html -f
+  RewriteRule ^(.+?)/?$ $1.html [L]
+
+  # 3. Real directories (notably "/" -> DirectoryIndex index.html) handled by Apache.
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # 4. Anything else -> 404 (ErrorDocument below renders the body).
+  RewriteRule ^ - [R=404,L]
+</IfModule>
+
+ErrorDocument 404 /inventorypanel/404.html
+
+# Long-cache hashed Next.js assets (filenames are content-hashed and immutable).
+<IfModule mod_headers.c>
+  <FilesMatch "_next/static/.*\.(js|css|woff2?|png|jpg|jpeg|gif|svg|webp|avif|ico)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
