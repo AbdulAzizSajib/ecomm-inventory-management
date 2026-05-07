@@ -7,8 +7,8 @@ import { QueryProvider } from "@/providers/query-provider"
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 
 export const metadata: Metadata = {
-  title: "HappyMart Admin",
-  description: "HappyMart Admin Dashboard",
+  title: "Ecomm Inventory Management",
+  description: "Ecomm Inventory Management Dashboard",
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -1,5 +1,9 @@
 import { StatCard } from "@/components/dashboard/StatCard"
 import { StatusBadge } from "@/components/dashboard/StatusBadge"
+import { OrdersBarChart } from "@/components/dashboard/OrdersBarChart"
+import { CategoryDonutChart } from "@/components/dashboard/CategoryDonutChart"
+import { OrderLocationMap } from "@/components/dashboard/OrderLocationMap"
+import { TopProducts } from "@/components/dashboard/TopProducts"
 import { DollarSign, ShoppingCart, Users, TrendingUp } from "lucide-react"
 
 const stats = [
@@ -13,7 +17,7 @@ const stats = [
   },
   {
     title: "Total Orders",
-    value: "1,284",
+    value: "1,506",
     change: "+8.2%",
     trend: "up" as const,
     icon: <ShoppingCart className="size-5 text-emerald-600" />,
@@ -38,11 +42,11 @@ const stats = [
 ]
 
 const recentOrders = [
-  { id: "#ORD-1052", customer: "Sarah Johnson", product: "Wireless Headphones", amount: "$129.99", status: "delivered" as const, date: "Apr 28, 2026" },
-  { id: "#ORD-1051", customer: "Michael Chen", product: "Smart Watch Pro", amount: "$249.00", status: "shipped" as const, date: "Apr 27, 2026" },
-  { id: "#ORD-1050", customer: "Emma Davis", product: "Running Shoes", amount: "$89.95", status: "processing" as const, date: "Apr 27, 2026" },
-  { id: "#ORD-1049", customer: "James Wilson", product: "Coffee Maker", amount: "$64.50", status: "pending" as const, date: "Apr 26, 2026" },
-  { id: "#ORD-1048", customer: "Lisa Brown", product: "Yoga Mat", amount: "$45.00", status: "cancelled" as const, date: "Apr 26, 2026" },
+  { id: "#ORD-1052", customer: "Sarah Johnson", product: "Wireless Headphones", amount: "$129.99", status: "delivered" as const, location: "Dhaka",      date: "Apr 28, 2026" },
+  { id: "#ORD-1051", customer: "Michael Chen",  product: "Smart Watch Pro",     amount: "$249.00", status: "shipped" as const,   location: "Chittagong", date: "Apr 27, 2026" },
+  { id: "#ORD-1050", customer: "Emma Davis",    product: "Running Shoes",       amount: "$89.95",  status: "processing" as const,location: "Sylhet",     date: "Apr 27, 2026" },
+  { id: "#ORD-1049", customer: "James Wilson",  product: "Coffee Maker",        amount: "$64.50",  status: "pending" as const,   location: "Khulna",     date: "Apr 26, 2026" },
+  { id: "#ORD-1048", customer: "Lisa Brown",    product: "Yoga Mat",            amount: "$45.00",  status: "cancelled" as const, location: "Rajshahi",   date: "Apr 26, 2026" },
 ]
 
 export default function DashboardPage() {
@@ -50,19 +54,42 @@ export default function DashboardPage() {
     <div>
       <div className="mb-6">
         <h2 className="text-base font-semibold text-gray-900">Overview</h2>
-        <p className="text-sm text-gray-500 mt-0.5">Welcome back! Here&apos;s what&apos;s happening today.</p>
+        <p className="text-sm text-gray-500 mt-0.5">
+          Welcome back! Here&apos;s what&apos;s happening today.
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
         {stats.map((stat) => (
           <StatCard key={stat.title} {...stat} />
         ))}
       </div>
 
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 mb-6">
+        <div className="xl:col-span-2">
+          <OrdersBarChart />
+        </div>
+        <div className="xl:col-span-1">
+          <CategoryDonutChart />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 mb-6">
+        <div className="xl:col-span-2">
+          <OrderLocationMap />
+        </div>
+        <div className="xl:col-span-1">
+          <TopProducts />
+        </div>
+      </div>
+
       <div className="bg-white rounded-lg border border-gray-200">
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
           <h3 className="text-sm font-semibold text-gray-900">Recent Orders</h3>
-          <a href="/orders" className="text-xs text-indigo-600 hover:text-indigo-700 font-medium transition-colors">
+          <a
+            href="/orders"
+            className="text-xs text-indigo-600 hover:text-indigo-700 font-medium transition-colors"
+          >
             View all →
           </a>
         </div>
@@ -73,6 +100,7 @@ export default function DashboardPage() {
                 <th className="text-left px-5 py-3 text-xs font-medium text-gray-500">Order</th>
                 <th className="text-left px-5 py-3 text-xs font-medium text-gray-500">Customer</th>
                 <th className="text-left px-5 py-3 text-xs font-medium text-gray-500 hidden md:table-cell">Product</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-gray-500 hidden lg:table-cell">Location</th>
                 <th className="text-left px-5 py-3 text-xs font-medium text-gray-500 hidden sm:table-cell">Date</th>
                 <th className="text-left px-5 py-3 text-xs font-medium text-gray-500">Amount</th>
                 <th className="text-left px-5 py-3 text-xs font-medium text-gray-500">Status</th>
@@ -84,6 +112,7 @@ export default function DashboardPage() {
                   <td className="px-5 py-3.5 font-medium text-gray-900 text-sm">{order.id}</td>
                   <td className="px-5 py-3.5 text-gray-600 text-sm">{order.customer}</td>
                   <td className="px-5 py-3.5 text-gray-600 text-sm hidden md:table-cell">{order.product}</td>
+                  <td className="px-5 py-3.5 text-gray-600 text-sm hidden lg:table-cell">{order.location}</td>
                   <td className="px-5 py-3.5 text-gray-500 text-sm hidden sm:table-cell">{order.date}</td>
                   <td className="px-5 py-3.5 font-medium text-gray-900 text-sm tabular-nums">{order.amount}</td>
                   <td className="px-5 py-3.5">

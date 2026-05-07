@@ -69,8 +69,8 @@ const navItems: NavItem[] = [
 
   // { label: "Payments", href: "/payments", icon: CreditCard },
   // { label: "Coupons", href: "/coupons", icon: Tag },
-  { label: "Banners", href: "/banners", icon: ImageIcon },
-  { label: "Plant", href: "/plant", icon: Factory },
+  // { label: "Banners", href: "/banners", icon: ImageIcon },
+  // { label: "Plant", href: "/plant", icon: Factory },
   {
     label: "Report",
     href: "/report",
@@ -134,11 +134,11 @@ export function Sidebar({ isOpen, onClose, isCollapsed, onToggleCollapse }: Side
     >
       <div className="flex h-14 items-center justify-between px-3 border-b border-slate-800 shrink-0">
         <div className={cn("flex items-center gap-2.5 overflow-hidden", isCollapsed && "justify-center w-full")}>
-          <div className="size-6 rounded bg-indigo-500 flex items-center justify-center shrink-0">
-            <span className="text-white text-xs font-bold">H</span>
-          </div>
+          {/* <div className="size-6 rounded bg-indigo-500 flex items-center justify-center shrink-0">
+            <span className="text-white text-xs font-bold">EIM</span>
+          </div> */}
           {!isCollapsed && (
-            <span className="text-white font-semibold tracking-tight text-sm truncate">HappyMart</span>
+            <span className="text-white text-center font-semibold tracking-tight text-[13px] truncate">Ecomm Inventory Management</span>
           )}
         </div>
         <button

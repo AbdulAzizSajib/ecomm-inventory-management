@@ -1,5 +1,5 @@
-# Apache config for Next.js static export served under /inventorypanel
-# Place this file inside the inventorypanel folder (Next copies it from public/).
+# Apache config for Next.js static export served under /ecomm-inventory-management
+# Place this file inside the ecomm-inventory-management folder (Next copies it from public/).
 
 # Don't expose directory listings (the export creates folders next to .html files
 # for RSC prefetch payloads — without this, refreshes show "Index of ...").
@@ -8,16 +8,22 @@ Options -Indexes
 # Don't auto-redirect /route -> /route/ when a same-named directory exists.
 DirectorySlash Off
 
+# Bare basePath without trailing slash -> redirect to add slash, so index.html serves.
+# (DirectorySlash Off above blocks Apache's built-in equivalent. RedirectMatch runs
+# earlier than mod_rewrite and at the parent-directory level too, so it catches the
+# bare-directory request even when this .htaccess isn't reached.)
+RedirectMatch 301 ^/ecomm-inventory-management$ /ecomm-inventory-management/
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /inventorypanel/
+  RewriteBase /ecomm-inventory-management
 
   # 1. Real files (assets in _next/, images, RSC .txt payloads, etc.) are served as-is.
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
 
   # 2. Clean URL: /route or /route/ -> /route.html when that file exists.
-  RewriteCond %{DOCUMENT_ROOT}/inventorypanel/$1.html -f
+  RewriteCond %{DOCUMENT_ROOT}/ecomm-inventory-management/$1.html -f
   RewriteRule ^(.+?)/?$ $1.html [L]
 
   # 3. Real directories (notably "/" -> DirectoryIndex index.html) handled by Apache.
@@ -28,7 +34,7 @@ DirectorySlash Off
   RewriteRule ^ - [R=404,L]
 </IfModule>
 
-ErrorDocument 404 /inventorypanel/404.html
+ErrorDocument 404 /ecomm-inventory-management/404.html
 
 # Long-cache hashed Next.js assets (filenames are content-hashed and immutable).
 <IfModule mod_headers.c>

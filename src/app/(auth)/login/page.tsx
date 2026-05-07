@@ -42,7 +42,7 @@ export default function LoginPage() {
           <div className="size-10 rounded-lg bg-indigo-500 flex items-center justify-center mb-3">
             <span className="text-white text-base font-bold">H</span>
           </div>
-          <h1 className="text-lg font-semibold text-gray-900">Sign in to HappyMart</h1>
+          <h1 className="text-lg font-semibold text-gray-900">Sign in to Ecomm Inventory Management</h1>
           <p className="text-sm text-gray-500 mt-1">Welcome back. Please enter your details.</p>
         </div>
 
