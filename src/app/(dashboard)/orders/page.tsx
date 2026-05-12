@@ -279,7 +279,11 @@ function ManageOrderDialog({
               className="w-full h-9 px-3 text-sm rounded-md border border-gray-200 bg-white text-gray-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors disabled:opacity-60"
             >
               {ORDER_STATUSES.map((s) => (
-                <option key={s.id} value={s.id}>
+                <option
+                  key={s.id}
+                  value={s.id}
+                  disabled={s.id < order.OrderStatusId}
+                >
                   {s.label}
                 </option>
               ))}
