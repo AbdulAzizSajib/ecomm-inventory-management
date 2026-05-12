@@ -2,14 +2,14 @@ import { PageHeader } from "@/components/dashboard/PageHeader"
 import { UserPlus, Search } from "lucide-react"
 
 const customers = [
-  { id: "USR-001", name: "Sarah Johnson",  email: "sarah@example.com",   location: "New York, US",     orders: 12, spent: "$1,429.88", joined: "Jan 14, 2025", verified: true  },
-  { id: "USR-002", name: "Michael Chen",   email: "mchen@example.com",   location: "San Francisco, US", orders: 8,  spent: "$987.50",   joined: "Feb 3, 2025",  verified: true  },
-  { id: "USR-003", name: "Emma Davis",     email: "emma.d@example.com",  location: "London, UK",       orders: 24, spent: "$3,201.40", joined: "Oct 22, 2024", verified: true  },
-  { id: "USR-004", name: "James Wilson",   email: "jwilson@example.com", location: "Chicago, US",      orders: 4,  spent: "$245.00",   joined: "Mar 18, 2025", verified: false },
-  { id: "USR-005", name: "Lisa Brown",     email: "lisa.b@example.com",  location: "Toronto, CA",      orders: 16, spent: "$2,115.75", joined: "Nov 5, 2024",  verified: true  },
-  { id: "USR-006", name: "David Lee",      email: "dlee@example.com",    location: "Seoul, KR",        orders: 31, spent: "$4,782.20", joined: "Sep 1, 2024",  verified: true  },
-  { id: "USR-007", name: "Anna Kim",       email: "anna.k@example.com",  location: "Sydney, AU",       orders: 6,  spent: "$612.30",   joined: "Apr 2, 2025",  verified: false },
-  { id: "USR-008", name: "Robert Taylor",  email: "rtaylor@example.com", location: "Berlin, DE",       orders: 9,  spent: "$1,089.45", joined: "Dec 10, 2024", verified: true  },
+  { id: "USR-001", name: "Sarah Johnson",  email: "sarah@example.com",   location: "New York, US",     orders: 12, spent: "৳1,429.88", joined: "Jan 14, 2025", verified: true  },
+  { id: "USR-002", name: "Michael Chen",   email: "mchen@example.com",   location: "San Francisco, US", orders: 8,  spent: "৳987.50",   joined: "Feb 3, 2025",  verified: true  },
+  { id: "USR-003", name: "Emma Davis",     email: "emma.d@example.com",  location: "London, UK",       orders: 24, spent: "৳3,201.40", joined: "Oct 22, 2024", verified: true  },
+  { id: "USR-004", name: "James Wilson",   email: "jwilson@example.com", location: "Chicago, US",      orders: 4,  spent: "৳245.00",   joined: "Mar 18, 2025", verified: false },
+  { id: "USR-005", name: "Lisa Brown",     email: "lisa.b@example.com",  location: "Toronto, CA",      orders: 16, spent: "৳2,115.75", joined: "Nov 5, 2024",  verified: true  },
+  { id: "USR-006", name: "David Lee",      email: "dlee@example.com",    location: "Seoul, KR",        orders: 31, spent: "৳4,782.20", joined: "Sep 1, 2024",  verified: true  },
+  { id: "USR-007", name: "Anna Kim",       email: "anna.k@example.com",  location: "Sydney, AU",       orders: 6,  spent: "৳612.30",   joined: "Apr 2, 2025",  verified: false },
+  { id: "USR-008", name: "Robert Taylor",  email: "rtaylor@example.com", location: "Berlin, DE",       orders: 9,  spent: "৳1,089.45", joined: "Dec 10, 2024", verified: true  },
 ]
 
 const initials = (name: string) =>

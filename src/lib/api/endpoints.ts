@@ -46,4 +46,10 @@ export const endpoints = {
     statement: "/stock/stock-statement",
     current: "/stock/current-stock",
   },
+  order: {
+    base: "/order",
+    byId: (id: string) => `/order/${id}`,
+    deliveryMen: "/order/delivery-man-list",
+    statusUpdate: "/order/order-status-update",
+  },
 } as const

@@ -1,11 +1,11 @@
 import { TrendingUp, TrendingDown } from "lucide-react"
 
 const products = [
-  { name: "Wireless Headphones", category: "Electronics", units: 248, revenue: "$32,224", trend: "up" as const, change: "+18%" },
-  { name: "Smart Watch Pro",     category: "Electronics", units: 192, revenue: "$28,608", trend: "up" as const, change: "+12%" },
-  { name: "Organic Tea Pack",    category: "Beverages",   units: 184, revenue: "$5,520",  trend: "up" as const, change: "+9%" },
-  { name: "Running Shoes",       category: "Apparel",     units: 156, revenue: "$14,040", trend: "down" as const, change: "-4%" },
-  { name: "Yoga Mat",            category: "Fitness",     units: 132, revenue: "$5,940",  trend: "up" as const, change: "+6%" },
+  { name: "Wireless Headphones", category: "Electronics", units: 248, revenue: "৳32,224", trend: "up" as const, change: "+18%" },
+  { name: "Smart Watch Pro",     category: "Electronics", units: 192, revenue: "৳28,608", trend: "up" as const, change: "+12%" },
+  { name: "Organic Tea Pack",    category: "Beverages",   units: 184, revenue: "৳5,520",  trend: "up" as const, change: "+9%" },
+  { name: "Running Shoes",       category: "Apparel",     units: 156, revenue: "৳14,040", trend: "down" as const, change: "-4%" },
+  { name: "Yoga Mat",            category: "Fitness",     units: 132, revenue: "৳5,940",  trend: "up" as const, change: "+6%" },
 ]
 
 export function TopProducts() {

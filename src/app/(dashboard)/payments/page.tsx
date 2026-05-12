@@ -11,18 +11,18 @@ const payments: {
   status: BadgeStatus
   date: string
 }[] = [
-  { id: "PAY-8821", order: "#ORD-1052", customer: "Sarah Johnson",  method: "Visa •••• 4242",       amount: "$129.99", status: "paid",     date: "Apr 28, 2026" },
-  { id: "PAY-8820", order: "#ORD-1051", customer: "Michael Chen",   method: "PayPal",                amount: "$249.00", status: "paid",     date: "Apr 27, 2026" },
-  { id: "PAY-8819", order: "#ORD-1050", customer: "Emma Davis",     method: "Mastercard •••• 8731",  amount: "$89.95",  status: "pending",  date: "Apr 27, 2026" },
-  { id: "PAY-8818", order: "#ORD-1049", customer: "James Wilson",   method: "Visa •••• 5566",        amount: "$64.50",  status: "failed",   date: "Apr 26, 2026" },
-  { id: "PAY-8817", order: "#ORD-1048", customer: "Lisa Brown",     method: "Apple Pay",             amount: "$45.00",  status: "refunded", date: "Apr 26, 2026" },
-  { id: "PAY-8816", order: "#ORD-1047", customer: "David Lee",      method: "Visa •••• 9012",        amount: "$312.00", status: "paid",     date: "Apr 25, 2026" },
-  { id: "PAY-8815", order: "#ORD-1046", customer: "Anna Kim",       method: "Google Pay",            amount: "$78.50",  status: "paid",     date: "Apr 25, 2026" },
-  { id: "PAY-8814", order: "#ORD-1045", customer: "Robert Taylor",  method: "Amex •••• 3344",        amount: "$199.99", status: "pending",  date: "Apr 24, 2026" },
+  { id: "PAY-8821", order: "#ORD-1052", customer: "Sarah Johnson",  method: "Visa •••• 4242",       amount: "৳129.99", status: "paid",     date: "Apr 28, 2026" },
+  { id: "PAY-8820", order: "#ORD-1051", customer: "Michael Chen",   method: "PayPal",                amount: "৳249.00", status: "paid",     date: "Apr 27, 2026" },
+  { id: "PAY-8819", order: "#ORD-1050", customer: "Emma Davis",     method: "Mastercard •••• 8731",  amount: "৳89.95",  status: "pending",  date: "Apr 27, 2026" },
+  { id: "PAY-8818", order: "#ORD-1049", customer: "James Wilson",   method: "Visa •••• 5566",        amount: "৳64.50",  status: "failed",   date: "Apr 26, 2026" },
+  { id: "PAY-8817", order: "#ORD-1048", customer: "Lisa Brown",     method: "Apple Pay",             amount: "৳45.00",  status: "refunded", date: "Apr 26, 2026" },
+  { id: "PAY-8816", order: "#ORD-1047", customer: "David Lee",      method: "Visa •••• 9012",        amount: "৳312.00", status: "paid",     date: "Apr 25, 2026" },
+  { id: "PAY-8815", order: "#ORD-1046", customer: "Anna Kim",       method: "Google Pay",            amount: "৳78.50",  status: "paid",     date: "Apr 25, 2026" },
+  { id: "PAY-8814", order: "#ORD-1045", customer: "Robert Taylor",  method: "Amex •••• 3344",        amount: "৳199.99", status: "pending",  date: "Apr 24, 2026" },
 ]
 
 const summaryCards = [
-  { label: "Total Revenue",   value: "$48,295", icon: DollarSign,  color: "text-indigo-600", bg: "bg-indigo-50" },
+  { label: "Total Revenue",   value: "৳48,295", icon: DollarSign,  color: "text-indigo-600", bg: "bg-indigo-50" },
   { label: "Successful",      value: "1,218",   icon: CreditCard,  color: "text-emerald-600", bg: "bg-emerald-50" },
   { label: "Pending",         value: "42",      icon: RefreshCw,   color: "text-amber-600",  bg: "bg-amber-50"  },
   { label: "Failed",          value: "24",      icon: AlertCircle, color: "text-red-600",    bg: "bg-red-50"    },

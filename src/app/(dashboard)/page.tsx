@@ -9,7 +9,7 @@ import { DollarSign, ShoppingCart, Users, TrendingUp } from "lucide-react"
 const stats = [
   {
     title: "Total Revenue",
-    value: "$48,295",
+    value: "৳48,295",
     change: "+12.5%",
     trend: "up" as const,
     icon: <DollarSign className="size-5 text-indigo-600" />,
@@ -33,7 +33,7 @@ const stats = [
   },
   {
     title: "Avg. Order Value",
-    value: "$37.62",
+    value: "৳37.62",
     change: "-2.4%",
     trend: "down" as const,
     icon: <TrendingUp className="size-5 text-amber-600" />,
@@ -42,24 +42,17 @@ const stats = [
 ]
 
 const recentOrders = [
-  { id: "#ORD-1052", customer: "Sarah Johnson", product: "Wireless Headphones", amount: "$129.99", status: "delivered" as const, location: "Dhaka",      date: "Apr 28, 2026" },
-  { id: "#ORD-1051", customer: "Michael Chen",  product: "Smart Watch Pro",     amount: "$249.00", status: "shipped" as const,   location: "Chittagong", date: "Apr 27, 2026" },
-  { id: "#ORD-1050", customer: "Emma Davis",    product: "Running Shoes",       amount: "$89.95",  status: "processing" as const,location: "Sylhet",     date: "Apr 27, 2026" },
-  { id: "#ORD-1049", customer: "James Wilson",  product: "Coffee Maker",        amount: "$64.50",  status: "pending" as const,   location: "Khulna",     date: "Apr 26, 2026" },
-  { id: "#ORD-1048", customer: "Lisa Brown",    product: "Yoga Mat",            amount: "$45.00",  status: "cancelled" as const, location: "Rajshahi",   date: "Apr 26, 2026" },
+  { id: "#ORD-1052", customer: "Sarah Johnson", product: "Wireless Headphones", amount: "৳129.99", status: "delivered" as const, location: "Dhaka",      date: "Apr 28, 2026" },
+  { id: "#ORD-1051", customer: "Michael Chen",  product: "Smart Watch Pro",     amount: "৳249.00", status: "shipped" as const,   location: "Chittagong", date: "Apr 27, 2026" },
+  { id: "#ORD-1050", customer: "Emma Davis",    product: "Running Shoes",       amount: "৳89.95",  status: "processing" as const,location: "Sylhet",     date: "Apr 27, 2026" },
+  { id: "#ORD-1049", customer: "James Wilson",  product: "Coffee Maker",        amount: "৳64.50",  status: "pending" as const,   location: "Khulna",     date: "Apr 26, 2026" },
+  { id: "#ORD-1048", customer: "Lisa Brown",    product: "Yoga Mat",            amount: "৳45.00",  status: "cancelled" as const, location: "Rajshahi",   date: "Apr 26, 2026" },
 ]
 
 export default function DashboardPage() {
   return (
     <div>
-      <div className="mb-6">
-        <h2 className="text-base font-semibold text-gray-900">Overview</h2>
-        <p className="text-sm text-gray-500 mt-0.5">
-          Welcome back! Here&apos;s what&apos;s happening today.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
         {stats.map((stat) => (
           <StatCard key={stat.title} {...stat} />
         ))}

@@ -12,14 +12,14 @@ const coupons: {
   status: BadgeStatus
   expires: string
 }[] = [
-  { code: "SUMMER25",   type: "percentage", value: "25% off",  minOrder: "$50",  used: 234, limit: 500,  status: "active",   expires: "Jun 30, 2026" },
-  { code: "WELCOME10",  type: "percentage", value: "10% off",  minOrder: "$0",   used: 891, limit: 1000, status: "active",   expires: "Dec 31, 2026" },
-  { code: "SAVE15",     type: "fixed",      value: "$15 off",  minOrder: "$75",  used: 500, limit: 500,  status: "inactive", expires: "May 1, 2026"  },
-  { code: "FLASH50",    type: "percentage", value: "50% off",  minOrder: "$100", used: 150, limit: 150,  status: "expired",  expires: "Apr 1, 2026"  },
-  { code: "FREESHIP",   type: "fixed",      value: "$10 off",  minOrder: "$30",  used: 412, limit: 800,  status: "active",   expires: "Jul 15, 2026" },
-  { code: "VIP20",      type: "percentage", value: "20% off",  minOrder: "$200", used: 88,  limit: 200,  status: "active",   expires: "Sep 30, 2026" },
-  { code: "BIRTHDAY",   type: "percentage", value: "15% off",  minOrder: "$0",   used: 67,  limit: 999,  status: "active",   expires: "Dec 31, 2026" },
-  { code: "CLEARANCE",  type: "fixed",      value: "$25 off",  minOrder: "$150", used: 200, limit: 200,  status: "expired",  expires: "Mar 15, 2026" },
+  { code: "SUMMER25",   type: "percentage", value: "25% off",  minOrder: "৳50",  used: 234, limit: 500,  status: "active",   expires: "Jun 30, 2026" },
+  { code: "WELCOME10",  type: "percentage", value: "10% off",  minOrder: "৳0",   used: 891, limit: 1000, status: "active",   expires: "Dec 31, 2026" },
+  { code: "SAVE15",     type: "fixed",      value: "৳15 off",  minOrder: "৳75",  used: 500, limit: 500,  status: "inactive", expires: "May 1, 2026"  },
+  { code: "FLASH50",    type: "percentage", value: "50% off",  minOrder: "৳100", used: 150, limit: 150,  status: "expired",  expires: "Apr 1, 2026"  },
+  { code: "FREESHIP",   type: "fixed",      value: "৳10 off",  minOrder: "৳30",  used: 412, limit: 800,  status: "active",   expires: "Jul 15, 2026" },
+  { code: "VIP20",      type: "percentage", value: "20% off",  minOrder: "৳200", used: 88,  limit: 200,  status: "active",   expires: "Sep 30, 2026" },
+  { code: "BIRTHDAY",   type: "percentage", value: "15% off",  minOrder: "৳0",   used: 67,  limit: 999,  status: "active",   expires: "Dec 31, 2026" },
+  { code: "CLEARANCE",  type: "fixed",      value: "৳25 off",  minOrder: "৳150", used: 200, limit: 200,  status: "expired",  expires: "Mar 15, 2026" },
 ]
 
 export default function CouponsPage() {

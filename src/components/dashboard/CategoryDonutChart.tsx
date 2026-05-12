@@ -11,22 +11,23 @@ const segments = [
 ]
 
 const total = segments.reduce((s, x) => s + x.value, 0)
-const cx = 110
-const cy = 110
-const r = 78
-const stroke = 22
+const cx = 140
+const cy = 140
+const r = 108
+const stroke = 30
 const C = 2 * Math.PI * r
+
+const arcs = segments.map((s, i) => {
+  const before = segments.slice(0, i).reduce((sum, x) => sum + x.value, 0)
+  return {
+    ...s,
+    dash: (s.value / total) * C,
+    offset: -((before / total) * C),
+  }
+})
 
 export function CategoryDonutChart() {
   const [hovered, setHovered] = useState<number | null>(null)
-
-  let cumulative = 0
-  const arcs = segments.map((s) => {
-    const dash = (s.value / total) * C
-    const offset = -((cumulative / total) * C)
-    cumulative += s.value
-    return { ...s, dash, offset }
-  })
 
   const center = hovered !== null ? segments[hovered] : null
 
@@ -38,9 +39,9 @@ export function CategoryDonutChart() {
           <p className="text-xs text-gray-500 mt-0.5">Share of total revenue</p>
         </div>
       </div>
-      <div className="p-5 flex-1 flex flex-col items-center justify-between gap-5">
-        <div className="relative">
-          <svg viewBox="0 0 220 220" className="w-44 h-44">
+      <div className="p-5 flex-1 flex flex-col items-center justify-between gap-6">
+        <div className="relative w-full max-w-70 aspect-square">
+          <svg viewBox="0 0 280 280" className="w-full h-full">
             <circle
               cx={cx}
               cy={cy}
@@ -79,22 +80,22 @@ export function CategoryDonutChart() {
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
             {center ? (
               <>
-                <span className="text-[10px] uppercase tracking-wide text-gray-500">
+                <span className="text-xs uppercase tracking-wide text-gray-500">
                   {center.label}
                 </span>
-                <span className="text-2xl font-semibold text-gray-900 tabular-nums">
+                <span className="text-3xl font-semibold text-gray-900 tabular-nums mt-1">
                   {center.value}%
                 </span>
               </>
             ) : (
               <>
-                <span className="text-[10px] uppercase tracking-wide text-gray-500">
+                <span className="text-xs uppercase tracking-wide text-gray-500">
                   Total
                 </span>
-                <span className="text-2xl font-semibold text-gray-900 tabular-nums">
-                  $48.2k
+                <span className="text-3xl font-semibold text-gray-900 tabular-nums mt-1">
+                  ৳48.2k
                 </span>
-                <span className="text-[10px] text-gray-500 mt-0.5">5 categories</span>
+                <span className="text-xs text-gray-500 mt-1">5 categories</span>
               </>
             )}
           </div>
