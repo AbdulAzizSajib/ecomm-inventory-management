@@ -268,18 +268,18 @@ export default function StockStatementPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50/70">
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wide whitespace-nowrap">Product</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wide">SKU</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wide whitespace-nowrap">Pack Size</th>
-                <th className="text-right px-5 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wide">Opening</th>
-                <th className="text-right px-5 py-3 text-xs font-semibold text-emerald-700 uppercase tracking-wide">Receive</th>
-                <th className="text-right px-5 py-3 text-xs font-semibold text-rose-700 uppercase tracking-wide">Issue</th>
-                <th className="text-right px-5 py-3 text-xs font-semibold text-amber-700 uppercase tracking-wide">Adjustment</th>
-                <th className="text-right px-5 py-3 text-xs font-semibold text-indigo-700 uppercase tracking-wide">Closing</th>
+              <tr className="border-b border-gray-200 bg-gray-50/70">
+                <th className="text-left px-3 py-2 text-xs font-semibold text-gray-600 uppercase tracking-wide whitespace-nowrap">Product</th>
+                <th className="text-left px-3 py-2 text-xs font-semibold text-gray-600 uppercase tracking-wide">SKU</th>
+                <th className="text-left px-3 py-2 text-xs font-semibold text-gray-600 uppercase tracking-wide whitespace-nowrap">Pack Size</th>
+                <th className="text-right px-3 py-2 text-xs font-semibold text-slate-600 uppercase tracking-wide">Opening</th>
+                <th className="text-right px-3 py-2 text-xs font-semibold text-emerald-700 uppercase tracking-wide">Receive</th>
+                <th className="text-right px-3 py-2 text-xs font-semibold text-rose-700 uppercase tracking-wide">Issue</th>
+                <th className="text-right px-3 py-2 text-xs font-semibold text-amber-700 uppercase tracking-wide">Adjustment</th>
+                <th className="text-right px-3 py-2 text-xs font-semibold text-indigo-700 uppercase tracking-wide">Closing</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody className="divide-y divide-gray-200">
               {!showResults ? (
                 <EmptyRow
                   icon={FileBarChart}
@@ -316,21 +316,21 @@ export default function StockStatementPage() {
                       reportQuery.isFetching && "opacity-60"
                     )}
                   >
-                    <td className="px-5 py-3.5">
+                    <td className="px-3 py-2.5">
                       <p className="font-medium text-gray-900">{r.ProductName}</p>
                       <p className="text-xs text-gray-400 font-mono mt-0.5">{r.ProductCode}</p>
                     </td>
-                    <td className="px-5 py-3.5 text-gray-700 font-mono text-xs">{r.SKU || "—"}</td>
-                    <td className="px-5 py-3.5 text-gray-600 whitespace-nowrap">{r.PackSize || "—"}</td>
-                    <td className="px-5 py-3.5 text-slate-700 text-right tabular-nums">{r.Opening}</td>
-                    <td className="px-5 py-3.5 text-right tabular-nums">
+                    <td className="px-3 py-2.5 text-gray-700 font-mono text-xs">{r.SKU || "—"}</td>
+                    <td className="px-3 py-2.5 text-gray-600 whitespace-nowrap">{r.PackSize || "—"}</td>
+                    <td className="px-3 py-2.5 text-slate-700 text-right tabular-nums">{r.Opening}</td>
+                    <td className="px-3 py-2.5 text-right tabular-nums">
                       <span className="text-emerald-700 font-medium">{r.Receive}</span>
                     </td>
-                    <td className="px-5 py-3.5 text-right tabular-nums">
+                    <td className="px-3 py-2.5 text-right tabular-nums">
                       <span className="text-rose-700 font-medium">{r.Issue}</span>
                     </td>
-                    <td className="px-5 py-3.5 text-amber-700 text-right tabular-nums">{r.Adjustment}</td>
-                    <td className="px-5 py-3.5 text-indigo-700 font-semibold text-right tabular-nums">
+                    <td className="px-3 py-2.5 text-amber-700 text-right tabular-nums">{r.Adjustment}</td>
+                    <td className="px-3 py-2.5 text-indigo-700 font-semibold text-right tabular-nums">
                       {r.Closing}
                     </td>
                   </tr>

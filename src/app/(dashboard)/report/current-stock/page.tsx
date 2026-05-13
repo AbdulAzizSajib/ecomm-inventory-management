@@ -264,17 +264,17 @@ export default function CurrentStockPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50/70">
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wide">Product</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wide">SKU</th>
-                <th className="text-right px-5 py-3 text-xs font-semibold text-amber-700 uppercase tracking-wide whitespace-nowrap">Not Released</th>
-                <th className="text-right px-5 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wide whitespace-nowrap">SB Balance</th>
-                <th className="text-right px-5 py-3 text-xs font-semibold text-indigo-700 uppercase tracking-wide whitespace-nowrap">Total</th>
-                <th className="text-right px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wide whitespace-nowrap">Trade Price</th>
-                <th className="text-right px-5 py-3 text-xs font-semibold text-emerald-700 uppercase tracking-wide whitespace-nowrap">Stock Value</th>
+              <tr className="border-b border-gray-200 bg-gray-50/70">
+                <th className="text-left px-3 py-2 text-xs font-semibold text-gray-600 uppercase tracking-wide">Product</th>
+                <th className="text-left px-3 py-2 text-xs font-semibold text-gray-600 uppercase tracking-wide">SKU</th>
+                <th className="text-right px-3 py-2 text-xs font-semibold text-amber-700 uppercase tracking-wide whitespace-nowrap">Not Released</th>
+                <th className="text-right px-3 py-2 text-xs font-semibold text-slate-600 uppercase tracking-wide whitespace-nowrap">SB Balance</th>
+                <th className="text-right px-3 py-2 text-xs font-semibold text-indigo-700 uppercase tracking-wide whitespace-nowrap">Total</th>
+                <th className="text-right px-3 py-2 text-xs font-semibold text-gray-600 uppercase tracking-wide whitespace-nowrap">Trade Price</th>
+                <th className="text-right px-3 py-2 text-xs font-semibold text-emerald-700 uppercase tracking-wide whitespace-nowrap">Stock Value</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody className="divide-y divide-gray-200">
               {!showResults ? (
                 <EmptyRow
                   colSpan={7}
@@ -317,24 +317,24 @@ export default function CurrentStockPage() {
                       reportQuery.isFetching && "opacity-60"
                     )}
                   >
-                    <td className="px-5 py-3.5">
+                    <td className="px-3 py-2.5">
                       <p className="font-medium text-gray-900">{r.ProductName}</p>
                       <p className="text-xs text-gray-400 font-mono mt-0.5">{r.ProductCode}</p>
                     </td>
-                    <td className="px-5 py-3.5 text-gray-700 font-mono text-xs">
+                    <td className="px-3 py-2.5 text-gray-700 font-mono text-xs">
                       {r.SKU || <span className="text-gray-400">—</span>}
                     </td>
-                    <td className="px-5 py-3.5 text-right tabular-nums">
+                    <td className="px-3 py-2.5 text-right tabular-nums">
                       <span className="text-amber-700 font-medium">{r.NotRelease}</span>
                     </td>
-                    <td className="px-5 py-3.5 text-slate-700 text-right tabular-nums">{r.SB_Balance}</td>
-                    <td className="px-5 py-3.5 text-indigo-700 font-semibold text-right tabular-nums">
+                    <td className="px-3 py-2.5 text-slate-700 text-right tabular-nums">{r.SB_Balance}</td>
+                    <td className="px-3 py-2.5 text-indigo-700 font-semibold text-right tabular-nums">
                       {r.NotRelease_SBBalance}
                     </td>
-                    <td className="px-5 py-3.5 text-gray-600 text-right tabular-nums">
+                    <td className="px-3 py-2.5 text-gray-600 text-right tabular-nums">
                       ৳{formatMoney(r.TradePrice)}
                     </td>
-                    <td className="px-5 py-3.5 text-emerald-700 font-medium text-right tabular-nums">
+                    <td className="px-3 py-2.5 text-emerald-700 font-medium text-right tabular-nums">
                       ৳{formatMoney(r.NotRelease_SBBalance * r.TradePrice)}
                     </td>
                   </tr>

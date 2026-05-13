@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // basePath: "/ecomm-inventory-management",
+  basePath: "/ecomm-inventory-management",
   output: "export",
 };
 
