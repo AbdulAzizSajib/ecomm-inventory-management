@@ -1,20 +1,25 @@
-import { TrendingUp, TrendingDown } from "lucide-react"
+import { Package } from "lucide-react"
 
-const products = [
-  { name: "Wireless Headphones", category: "Electronics", units: 248, revenue: "৳32,224", trend: "up" as const, change: "+18%" },
-  { name: "Smart Watch Pro",     category: "Electronics", units: 192, revenue: "৳28,608", trend: "up" as const, change: "+12%" },
-  { name: "Organic Tea Pack",    category: "Beverages",   units: 184, revenue: "৳5,520",  trend: "up" as const, change: "+9%" },
-  { name: "Running Shoes",       category: "Apparel",     units: 156, revenue: "৳14,040", trend: "down" as const, change: "-4%" },
-  { name: "Yoga Mat",            category: "Fitness",     units: 132, revenue: "৳5,940",  trend: "up" as const, change: "+6%" },
-]
+export interface TopProductItem {
+  name: string
+  qty: number
+  revenue: number
+}
 
-export function TopProducts() {
+interface Props {
+  items: TopProductItem[]
+}
+
+const formatMoney = (n: number) =>
+  n.toLocaleString(undefined, { maximumFractionDigits: 2 })
+
+export function TopProducts({ items }: Props) {
   return (
     <div className="bg-white rounded-lg border border-gray-200 h-full flex flex-col">
       <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
         <div>
           <h3 className="text-sm font-semibold text-gray-900">Top Products</h3>
-          <p className="text-xs text-gray-500 mt-0.5">Best sellers this week</p>
+          <p className="text-xs text-gray-500 mt-0.5">Best sellers this period</p>
         </div>
         <a
           href="/products"
@@ -23,36 +28,40 @@ export function TopProducts() {
           View all →
         </a>
       </div>
-      <ul className="divide-y divide-gray-50 flex-1">
-        {products.map((p, i) => (
-          <li key={p.name} className="flex items-center gap-3 px-5 py-3">
-            <span className="size-7 shrink-0 rounded-md bg-gray-50 text-gray-500 text-xs font-semibold flex items-center justify-center">
-              {i + 1}
-            </span>
-            <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium text-gray-900 truncate">{p.name}</p>
-              <p className="text-xs text-gray-500">
-                {p.category} · {p.units} sold
-              </p>
-            </div>
-            <div className="text-right shrink-0">
-              <p className="text-sm font-semibold text-gray-900 tabular-nums">{p.revenue}</p>
-              <p
-                className={`flex items-center justify-end gap-0.5 text-xs font-medium ${
-                  p.trend === "up" ? "text-emerald-600" : "text-red-600"
-                }`}
-              >
-                {p.trend === "up" ? (
-                  <TrendingUp className="size-3" />
-                ) : (
-                  <TrendingDown className="size-3" />
-                )}
-                {p.change}
-              </p>
-            </div>
-          </li>
-        ))}
-      </ul>
+      {items.length === 0 ? (
+        <div className="flex-1 flex flex-col items-center justify-center gap-2 px-5 py-10">
+          <div className="size-10 rounded-full bg-gray-50 flex items-center justify-center">
+            <Package className="size-5 text-gray-400" />
+          </div>
+          <p className="text-xs text-gray-500">No sales recorded yet.</p>
+        </div>
+      ) : (
+        <ul className="divide-y divide-gray-50 flex-1">
+          {items.map((p, i) => (
+            <li key={`${p.name}-${i}`} className="flex items-center gap-3 px-5 py-3">
+              <span className="size-7 shrink-0 rounded-md bg-gray-50 text-gray-500 text-xs font-semibold flex items-center justify-center">
+                {i + 1}
+              </span>
+              <div className="min-w-0 flex-1">
+                <p
+                  className="text-sm font-medium text-gray-900 line-clamp-2"
+                  title={p.name}
+                >
+                  {p.name}
+                </p>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  {p.qty} sold
+                </p>
+              </div>
+              <div className="text-right shrink-0">
+                <p className="text-sm font-semibold text-gray-900 tabular-nums">
+                  ৳{formatMoney(p.revenue)}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   )
 }

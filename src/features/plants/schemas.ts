@@ -27,7 +27,10 @@ export const plantFormSchema = z.object({
     .min(1, "Phone is required")
     .max(30, "Phone must be 30 characters or fewer")
     .trim(),
-  Active: z.boolean(),
+  Remarks: z
+    .string()
+    .max(500, "Remarks must be 500 characters or fewer")
+    .optional(),
 })
 
 export type PlantFormValues = z.infer<typeof plantFormSchema>

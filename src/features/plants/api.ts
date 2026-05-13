@@ -1,11 +1,7 @@
 import { apiClient } from "@/lib/api/client"
 import { endpoints } from "@/lib/api/endpoints"
 
-import type {
-  CreatePlantRequest,
-  Plant,
-  UpdatePlantRequest,
-} from "./types"
+import type { Plant } from "./types"
 
 interface MessageResponse {
   message?: string
@@ -37,23 +33,23 @@ export async function getPlantByCode(code: string): Promise<Plant> {
   return data as Plant
 }
 
-export async function createPlant(
-  payload: CreatePlantRequest
-): Promise<MessageResponse> {
+export async function createPlant(formData: FormData): Promise<MessageResponse> {
   const { data } = await apiClient.post<MessageResponse>(
     endpoints.plant.base,
-    payload
+    formData,
+    { headers: { "Content-Type": "multipart/form-data" } }
   )
   return data ?? {}
 }
 
 export async function updatePlant(
   code: string,
-  payload: UpdatePlantRequest
+  formData: FormData
 ): Promise<MessageResponse> {
   const { data } = await apiClient.put<MessageResponse>(
     endpoints.plant.byCode(code),
-    payload
+    formData,
+    { headers: { "Content-Type": "multipart/form-data" } }
   )
   return data ?? {}
 }

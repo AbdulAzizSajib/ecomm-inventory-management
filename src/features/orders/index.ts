@@ -8,6 +8,7 @@ export {
   OUT_FOR_DELIVERY_STATUS_ID,
   badgeForStatusId,
   badgeForStatusName,
+  colorForStatusName,
   type OrderStatusOption,
 } from "./constants"
 export type {

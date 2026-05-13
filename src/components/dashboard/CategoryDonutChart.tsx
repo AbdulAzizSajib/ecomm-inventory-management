@@ -1,42 +1,76 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
 
-const segments = [
-  { label: "Groceries", value: 32, color: "#6366f1" },
-  { label: "Beverages", value: 22, color: "#10b981" },
-  { label: "Personal Care", value: 18, color: "#f59e0b" },
-  { label: "Snacks", value: 16, color: "#ef4444" },
-  { label: "Household", value: 12, color: "#8b5cf6" },
-]
+export interface DonutSegment {
+  label: string
+  value: number
+  color: string
+}
 
-const total = segments.reduce((s, x) => s + x.value, 0)
+interface Props {
+  segments: DonutSegment[]
+  title?: string
+  subtitle?: string
+  centerLabel?: string
+  centerValue?: string
+  centerSubtitle?: string
+  formatValue?: (v: number) => string
+}
+
 const cx = 140
 const cy = 140
 const r = 108
 const stroke = 30
 const C = 2 * Math.PI * r
 
-const arcs = segments.map((s, i) => {
-  const before = segments.slice(0, i).reduce((sum, x) => sum + x.value, 0)
-  return {
-    ...s,
-    dash: (s.value / total) * C,
-    offset: -((before / total) * C),
-  }
-})
-
-export function CategoryDonutChart() {
+export function CategoryDonutChart({
+  segments,
+  title = "Distribution",
+  subtitle,
+  centerLabel,
+  centerValue,
+  centerSubtitle,
+  formatValue,
+}: Props) {
   const [hovered, setHovered] = useState<number | null>(null)
 
-  const center = hovered !== null ? segments[hovered] : null
+  const total = useMemo(
+    () => segments.reduce((s, x) => s + x.value, 0),
+    [segments]
+  )
+
+  const arcs = useMemo(() => {
+    if (total === 0) return []
+    return segments.map((s, i) => {
+      const before = segments
+        .slice(0, i)
+        .reduce((sum, x) => sum + x.value, 0)
+      return {
+        ...s,
+        dash: (s.value / total) * C,
+        offset: -((before / total) * C),
+      }
+    })
+  }, [segments, total])
+
+  const centerActive = hovered !== null ? segments[hovered] : null
+  const formatV = formatValue ?? ((v: number) => v.toLocaleString())
+
+  const defaultCenterValue =
+    centerValue ?? (total === 0 ? "0" : total.toLocaleString())
+  const defaultCenterLabel = centerLabel ?? "Total"
+  const defaultSubtitle =
+    centerSubtitle ?? `${segments.length} ${segments.length === 1 ? "item" : "items"}`
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 h-full flex flex-col">
       <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
         <div>
-          <h3 className="text-sm font-semibold text-gray-900">Sales by Category</h3>
-          <p className="text-xs text-gray-500 mt-0.5">Share of total revenue</p>
+          <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
+          {subtitle && (
+            <p className="text-xs text-gray-500 mt-0.5">{subtitle}</p>
+          )}
         </div>
       </div>
       <div className="p-5 flex-1 flex flex-col items-center justify-between gap-6">
@@ -55,7 +89,7 @@ export function CategoryDonutChart() {
               const dimmed = hovered !== null && hovered !== i
               return (
                 <circle
-                  key={a.label}
+                  key={`${a.label}-${i}`}
                   cx={cx}
                   cy={cy}
                   r={r}
@@ -78,50 +112,61 @@ export function CategoryDonutChart() {
             })}
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-            {center ? (
+            {centerActive ? (
               <>
                 <span className="text-xs uppercase tracking-wide text-gray-500">
-                  {center.label}
+                  {centerActive.label}
                 </span>
                 <span className="text-3xl font-semibold text-gray-900 tabular-nums mt-1">
-                  {center.value}%
+                  {formatV(centerActive.value)}
                 </span>
+                {total > 0 && (
+                  <span className="text-xs text-gray-500 mt-1">
+                    {((centerActive.value / total) * 100).toFixed(1)}%
+                  </span>
+                )}
               </>
             ) : (
               <>
                 <span className="text-xs uppercase tracking-wide text-gray-500">
-                  Total
+                  {defaultCenterLabel}
                 </span>
                 <span className="text-3xl font-semibold text-gray-900 tabular-nums mt-1">
-                  ৳48.2k
+                  {defaultCenterValue}
                 </span>
-                <span className="text-xs text-gray-500 mt-1">5 categories</span>
+                <span className="text-xs text-gray-500 mt-1">
+                  {defaultSubtitle}
+                </span>
               </>
             )}
           </div>
         </div>
 
-        <ul className="w-full space-y-2">
-          {segments.map((s, i) => (
-            <li
-              key={s.label}
-              onMouseEnter={() => setHovered(i)}
-              onMouseLeave={() => setHovered(null)}
-              className="flex items-center justify-between text-xs cursor-pointer"
-            >
-              <span className="flex items-center gap-2 text-gray-700">
-                <span
-                  className="size-2.5 rounded-sm"
-                  style={{ backgroundColor: s.color }}
-                />
-                {s.label}
-              </span>
-              <span className="font-medium text-gray-900 tabular-nums">
-                {s.value}%
-              </span>
-            </li>
-          ))}
-        </ul>
+        {segments.length > 0 ? (
+          <ul className="w-full space-y-2">
+            {segments.map((s, i) => (
+              <li
+                key={`${s.label}-${i}`}
+                onMouseEnter={() => setHovered(i)}
+                onMouseLeave={() => setHovered(null)}
+                className="flex items-center justify-between text-xs cursor-pointer"
+              >
+                <span className="flex items-center gap-2 text-gray-700">
+                  <span
+                    className="size-2.5 rounded-sm"
+                    style={{ backgroundColor: s.color }}
+                  />
+                  {s.label}
+                </span>
+                <span className="font-medium text-gray-900 tabular-nums">
+                  {formatV(s.value)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-xs text-gray-400">No data to display.</p>
+        )}
       </div>
     </div>
   )

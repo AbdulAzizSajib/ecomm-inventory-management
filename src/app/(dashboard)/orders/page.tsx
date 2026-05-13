@@ -18,6 +18,7 @@ import {
 } from "@/features/orders"
 
 const PAGE_LIMIT = 10
+const DISABLED_MANAGE_STATUS_IDS = new Set([7, 8])
 
 function formatDate(iso: string): string {
   const d = new Date(iso)
@@ -126,8 +127,14 @@ export default function OrdersPage() {
                     <td className="px-5 py-3.5 text-right">
                       <button
                         type="button"
+                        disabled={DISABLED_MANAGE_STATUS_IDS.has(order.OrderStatusId)}
                         onClick={() => setManaging(order)}
-                        className="text-xs text-indigo-600 hover:text-indigo-700 font-medium transition-colors"
+                        className="text-xs font-medium transition-colors text-indigo-600 hover:text-indigo-700 disabled:cursor-not-allowed disabled:text-gray-300"
+                        title={
+                          DISABLED_MANAGE_STATUS_IDS.has(order.OrderStatusId)
+                            ? "This order cannot be managed after it is delivered or cancelled."
+                            : "Manage order"
+                        }
                       >
                         Manage
                       </button>

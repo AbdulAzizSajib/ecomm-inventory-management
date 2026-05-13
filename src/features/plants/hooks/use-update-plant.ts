@@ -4,18 +4,17 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 import { updatePlant } from "../api"
 import { plantKeys } from "../keys"
-import type { UpdatePlantRequest } from "../types"
 
 interface UpdatePlantArgs {
   code: string
-  payload: UpdatePlantRequest
+  formData: FormData
 }
 
 export function useUpdatePlant() {
   const queryClient = useQueryClient()
 
   return useMutation<{ message?: string }, unknown, UpdatePlantArgs>({
-    mutationFn: ({ code, payload }) => updatePlant(code, payload),
+    mutationFn: ({ code, formData }) => updatePlant(code, formData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: plantKeys.list() })
     },

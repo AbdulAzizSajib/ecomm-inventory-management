@@ -32,3 +32,28 @@ export function badgeForStatusName(name: string): BadgeStatus {
   const match = ORDER_STATUSES.find((s) => s.badge === normalized)
   return match?.badge ?? "pending"
 }
+
+const STATUS_COLOR: Record<BadgeStatus, string> = {
+  pending:          "#f59e0b",
+  confirmed:        "#0ea5e9",
+  processing:       "#3b82f6",
+  packed:           "#06b6d4",
+  shipped:          "#6366f1",
+  out_for_delivery: "#8b5cf6",
+  delivered:        "#10b981",
+  cancelled:        "#ef4444",
+  returned:         "#f97316",
+  refunded:         "#a855f7",
+  in_stock:         "#10b981",
+  low_stock:        "#f59e0b",
+  out_of_stock:     "#ef4444",
+  active:           "#10b981",
+  inactive:         "#9ca3af",
+  expired:          "#ef4444",
+  paid:             "#10b981",
+  failed:           "#ef4444",
+}
+
+export function colorForStatusName(name: string): string {
+  return STATUS_COLOR[badgeForStatusName(name)] ?? "#9ca3af"
+}

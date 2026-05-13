@@ -1,6 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
+import { useQueryClient } from "@tanstack/react-query"
 import {
   Loader2,
   Building2,
@@ -21,7 +22,11 @@ import { PageHeader } from "@/components/dashboard/PageHeader"
 import { cn } from "@/lib/utils"
 import { getApiErrorMessage } from "@/lib/api/client"
 import { usePlants } from "@/features/plants"
-import { useStockStatement, type StockStatementParams } from "@/features/stock"
+import {
+  stockKeys,
+  useStockStatement,
+  type StockStatementParams,
+} from "@/features/stock"
 
 interface FilterState {
   plant: string
@@ -56,6 +61,7 @@ const SUMMARY_CARDS = [
 
 export default function StockStatementPage() {
   const plantsQuery = usePlants()
+  const qc = useQueryClient()
 
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS)
   const [applied, setApplied] = useState<StockStatementParams | null>(null)
@@ -99,12 +105,15 @@ export default function StockStatementPage() {
     if (!filters.toDate) return setError("To date is required.")
     if (filters.fromDate > filters.toDate)
       return setError("From date must be before or equal to To date.")
-    setApplied({
+    const params: StockStatementParams = {
       plant: selectedPlant,
       business: filters.business.trim(),
       fromDate: filters.fromDate,
       toDate: filters.toDate,
-    })
+    }
+    // Invalidate so an identical-params re-click still refetches.
+    qc.invalidateQueries({ queryKey: stockKeys.statement(params) })
+    setApplied(params)
   }
 
   const onReset = () => {

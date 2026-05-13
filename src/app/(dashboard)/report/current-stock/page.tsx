@@ -1,6 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
+import { useQueryClient } from "@tanstack/react-query"
 import {
   Loader2,
   Search,
@@ -20,7 +21,11 @@ import { PageHeader } from "@/components/dashboard/PageHeader"
 import { cn } from "@/lib/utils"
 import { getApiErrorMessage } from "@/lib/api/client"
 import { usePlants } from "@/features/plants"
-import { useCurrentStock, type CurrentStockParams } from "@/features/stock"
+import {
+  stockKeys,
+  useCurrentStock,
+  type CurrentStockParams,
+} from "@/features/stock"
 
 interface FilterState {
   plant: string
@@ -47,6 +52,7 @@ const SUMMARY_CARDS = [
 
 export default function CurrentStockPage() {
   const plantsQuery = usePlants()
+  const qc = useQueryClient()
 
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS)
   const [applied, setApplied] = useState<CurrentStockParams | null>(null)
@@ -97,10 +103,13 @@ export default function CurrentStockPage() {
     setError(null)
     if (!selectedPlant) return setError("Plant is required.")
     if (!filters.business.trim()) return setError("Business is required.")
-    setApplied({
+    const params: CurrentStockParams = {
       plant: selectedPlant,
       business: filters.business.trim(),
-    })
+    }
+    // Invalidate so an identical-params re-click still refetches.
+    qc.invalidateQueries({ queryKey: stockKeys.current(params) })
+    setApplied(params)
   }
 
   const onReset = () => {

@@ -11,16 +11,6 @@ export interface Plant {
   ProductionReceive?: string | null
   DepotCode?: string | null
   MM_PlantId?: number | string | null
+  ImagePath?: string | null
+  Remarks?: string | null
 }
-
-export interface PlantRequest {
-  PlantCode: string
-  PlantName: string
-  PlantAddress: string
-  PlantEmail: string
-  PlantPhone: string
-  Active: 0 | 1
-}
-
-export type CreatePlantRequest = PlantRequest
-export type UpdatePlantRequest = Omit<PlantRequest, "PlantCode">

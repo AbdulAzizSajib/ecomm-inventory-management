@@ -52,4 +52,7 @@ export const endpoints = {
     deliveryMen: "/order/delivery-man-list",
     statusUpdate: "/order/order-status-update",
   },
+  dashboard: {
+    base: "/dashboard",
+  },
 } as const
