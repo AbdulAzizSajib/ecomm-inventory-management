@@ -19,6 +19,7 @@ export const endpoints = {
     base: "/product",
     byId: (code: string) => `/product/${code}`,
     variants: (code: string) => `/product/variants/${code}`,
+    updateSellingPrice: "/product/update-selling-price",
   },
   plant: {
     base: "/plant",

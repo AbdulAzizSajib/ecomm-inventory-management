@@ -34,8 +34,10 @@ import {
   useCreateProduct,
   useDeleteProduct,
   useUpdateProduct,
+  useUpdateSellingPrice,
   type Product,
   type ProductFormValues,
+  type ProductVariant,
 } from "@/features/products"
 import { useCategories } from "@/features/categories"
 import { useBrands } from "@/features/brands"
@@ -278,6 +280,7 @@ export default function ProductsPage() {
 // ─── Variants panel (expanded row) ───────────────────────────────────────────
 function ProductVariantsPanel({ code }: { code: string }) {
   const variantsQuery = useProductVariants(code)
+  const [editingVariant, setEditingVariant] = useState<ProductVariant | null>(null)
 
   if (variantsQuery.isPending) {
     return (
@@ -302,25 +305,129 @@ function ProductVariantsPanel({ code }: { code: string }) {
   }
 
   return (
-    <div className="overflow-x-auto rounded-md border border-gray-200 bg-white">
-      <table className="w-full text-xs">
-        <thead>
-          <tr className="bg-gray-50 border-b border-gray-200">
-            <th className="text-left px-3 py-2 font-medium text-gray-500 uppercase tracking-wide">Barcode</th>
-            <th className="text-left px-3 py-2 font-medium text-gray-500 uppercase tracking-wide">SKU</th>
-            <th className="text-left px-3 py-2 font-medium text-gray-500 uppercase tracking-wide">Attributes</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-100">
-          {variants.map((v, i) => (
-            <tr key={`${v.BarCode}-${i}`}>
-              <td className="px-3 py-2 font-mono text-gray-700">{v.BarCode}</td>
-              <td className="px-3 py-2 font-mono text-gray-700">{v.SKU}</td>
-              <td className="px-3 py-2 text-gray-600">{v.Attributes || "—"}</td>
+    <>
+      <div className="overflow-x-auto rounded-md border border-gray-200 bg-white">
+        <table className="w-full text-xs">
+          <thead>
+            <tr className="bg-gray-50 border-b border-gray-200">
+              <th className="text-left px-3 py-2 font-medium text-gray-500 uppercase tracking-wide">Barcode</th>
+              <th className="text-left px-3 py-2 font-medium text-gray-500 uppercase tracking-wide">SKU</th>
+              <th className="text-left px-3 py-2 font-medium text-gray-500 uppercase tracking-wide">Attributes</th>
+              <th className="text-right px-3 py-2 font-medium text-gray-500 uppercase tracking-wide whitespace-nowrap">Selling Price</th>
+              <th className="text-right px-3 py-2 font-medium text-gray-500 uppercase tracking-wide">Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {variants.map((v, i) => (
+              <tr key={`${v.BarCode}-${i}`} className="hover:bg-gray-50/60 transition-colors">
+                <td className="px-3 py-2 font-mono text-gray-700">{v.BarCode}</td>
+                <td className="px-3 py-2 font-mono text-gray-700">{v.SKU}</td>
+                <td className="px-3 py-2 text-gray-600">{v.Attributes || "—"}</td>
+                <td className="px-3 py-2 text-right tabular-nums font-medium text-gray-900">
+                  ৳{v.SellingPrice.toLocaleString()}
+                </td>
+                <td className="px-3 py-2 text-right">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setEditingVariant(v)
+                    }}
+                    className="inline-flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-700 font-medium transition-colors"
+                  >
+                    <Pencil className="size-3" />
+                    Edit Price
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {editingVariant && (
+        <EditSellingPriceDialog
+          variant={editingVariant}
+          onClose={() => setEditingVariant(null)}
+        />
+      )}
+    </>
+  )
+}
+
+// ─── Edit selling price dialog ────────────────────────────────────────────────
+function EditSellingPriceDialog({
+  variant,
+  onClose,
+}: {
+  variant: ProductVariant
+  onClose: () => void
+}) {
+  const [price, setPrice] = useState(String(variant.SellingPrice))
+  const [error, setError] = useState<string | null>(null)
+  const mutation = useUpdateSellingPrice()
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const num = Number(price)
+    if (!price || isNaN(num) || num <= 0) {
+      setError("Must be a positive number.")
+      return
+    }
+    setError(null)
+    mutation.mutate(
+      { productCode: variant.productCode, variantId: variant.variantId, SellingPrice: num },
+      { onSuccess: onClose, onError: (err) => setError(getApiErrorMessage(err, "Failed to update price")) }
+    )
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+      <div className="absolute inset-0 bg-black/40" onClick={mutation.isPending ? undefined : onClose} aria-hidden />
+      <div className="relative w-full max-w-sm rounded-lg bg-white shadow-lg border border-gray-200">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+          <h3 className="text-sm font-semibold text-gray-900">Update Selling Price</h3>
+          <button type="button" onClick={onClose} disabled={mutation.isPending} className="text-gray-400 hover:text-gray-600 transition-colors">
+            <X className="size-4" />
+          </button>
+        </div>
+        <form onSubmit={handleSubmit} noValidate>
+          <div className="px-5 py-4 space-y-3">
+            <p className="text-xs text-gray-500 font-mono">{variant.SKU} · {variant.Attributes}</p>
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-1.5">Selling Price</label>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                autoFocus
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                className={inputCn(!!error)}
+              />
+              {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
+            </div>
+          </div>
+          <div className="flex items-center justify-end gap-2 px-5 py-4 border-t border-gray-100">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={mutation.isPending}
+              className="h-8 px-3 rounded-md border border-gray-200 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-60"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={mutation.isPending}
+              className="h-8 px-3 rounded-md bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed inline-flex items-center gap-1.5"
+            >
+              {mutation.isPending && <Loader2 className="size-3.5 animate-spin" />}
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   )
 }

@@ -28,7 +28,10 @@ export interface ProductListParams {
 }
 
 export interface ProductVariant {
+  productCode: string
+  variantId: number
   BarCode: string
   SKU: string
+  SellingPrice: number
   Attributes: string
 }

@@ -51,3 +51,12 @@ export async function deleteProduct(code: string): Promise<unknown> {
   const { data } = await apiClient.delete(endpoints.product.byId(code))
   return data
 }
+
+export async function updateSellingPrice(payload: {
+  productCode: string
+  variantId: number
+  SellingPrice: number
+}): Promise<unknown> {
+  const { data } = await apiClient.put(endpoints.product.updateSellingPrice, payload)
+  return data
+}
