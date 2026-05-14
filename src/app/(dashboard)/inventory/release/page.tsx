@@ -1,18 +1,12 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
-import { Calendar, Loader2, Pencil, Plus, RotateCcw, Trash2, X } from "lucide-react"
+import { Calendar, Loader2, RotateCcw, X } from "lucide-react"
 
 import { PageHeader } from "@/components/dashboard/PageHeader"
 import { cn } from "@/lib/utils"
 import { getApiErrorMessage } from "@/lib/api/client"
-import {
-  useReceives,
-  useReceive,
-  useDeleteReceive,
-  type ReceiveListItem,
-} from "@/features/receive"
+import { useReleases, useRelease } from "@/features/release"
 
 const LIMIT = 10
 
@@ -22,26 +16,27 @@ const firstOfMonthIso = () => {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-01`
 }
 
-function formatDate(str: string | null) {
+function formatDate(str: string | null | undefined) {
   if (!str) return "—"
   return str.slice(0, 10)
 }
 
-export default function ReceivePage() {
+export default function ReleasePage() {
   const [page, setPage] = useState(1)
   const [startDate, setStartDate] = useState(firstOfMonthIso())
   const [endDate, setEndDate] = useState(todayIso())
-  const [confirmDelete, setConfirmDelete] = useState<ReceiveListItem | null>(null)
-  const [deleteError, setDeleteError] = useState<string | null>(null)
   const [detailId, setDetailId] = useState<string | null>(null)
 
-  const receivesQuery = useReceives({
+  const releasesQuery = useReleases({
     page,
     limit: LIMIT,
     startDate: startDate || undefined,
     endDate: endDate || undefined,
   })
-  const deleteMutation = useDeleteReceive()
+
+  const totalPage = releasesQuery.data?.totalPage ?? 1
+  const total = releasesQuery.data?.total ?? 0
+  const rows = releasesQuery.data?.data ?? []
 
   const onResetFilters = () => {
     setStartDate(firstOfMonthIso())
@@ -49,33 +44,11 @@ export default function ReceivePage() {
     setPage(1)
   }
 
-  const totalPage = receivesQuery.data?.totalPage ?? 1
-  const total = receivesQuery.data?.total ?? 0
-  const rows = receivesQuery.data?.data ?? []
-
-  const handleDelete = (item: ReceiveListItem) => {
-    setDeleteError(null)
-    deleteMutation.mutate(item.QuarantineReceiveNo, {
-      onSuccess: () => setConfirmDelete(null),
-      onError: (err) =>
-        setDeleteError(getApiErrorMessage(err, "Failed to delete receive")),
-    })
-  }
-
   return (
     <div>
       <PageHeader
-        title="Receive"
-        description="Manage inventory receive records"
-        action={
-          <Link
-            href="/inventory/receive/new"
-            className="flex items-center gap-1.5 h-8 px-3 rounded-md bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700 transition-colors"
-          >
-            <Plus className="size-3.5" />
-            New Receive
-          </Link>
-        }
+        title="Release"
+        description="Inventory release records"
       />
 
       <div className="bg-white rounded-lg border border-gray-200">
@@ -116,13 +89,13 @@ export default function ReceivePage() {
           <button
             type="button"
             onClick={onResetFilters}
-            disabled={receivesQuery.isFetching}
+            disabled={releasesQuery.isFetching}
             className="h-9 px-3 rounded-md border border-gray-200 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-60 inline-flex items-center gap-1.5"
           >
             <RotateCcw className="size-3.5" />
             Reset
           </button>
-          {receivesQuery.isFetching && (
+          {releasesQuery.isFetching && (
             <span className="ml-auto text-xs text-gray-500 inline-flex items-center gap-1.5">
               <Loader2 className="size-3 animate-spin" />
               Loading...
@@ -137,88 +110,67 @@ export default function ReceivePage() {
                 <th className="text-left px-5 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide whitespace-nowrap">Receive No</th>
                 <th className="text-left px-5 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide">Plant</th>
                 <th className="text-left px-5 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide whitespace-nowrap">Receive Date</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide whitespace-nowrap">Reference No</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide whitespace-nowrap">FGTN No</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide whitespace-nowrap">QC Receive No</th>
                 <th className="text-left px-5 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide">Business</th>
                 <th className="text-left px-5 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide">Period</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide">Paid</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide">Stored</th>
                 <th className="text-left px-5 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide whitespace-nowrap">Created By</th>
-                <th className="text-right px-5 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {receivesQuery.isPending ? (
+              {releasesQuery.isPending ? (
                 <tr>
                   <td colSpan={9} className="px-5 py-10 text-center text-gray-500">
                     <Loader2 className="size-4 animate-spin inline mr-2 align-[-2px]" />
                     Loading...
                   </td>
                 </tr>
-              ) : receivesQuery.isError ? (
+              ) : releasesQuery.isError ? (
                 <tr>
                   <td colSpan={9} className="px-5 py-10 text-center text-red-600">
-                    {getApiErrorMessage(receivesQuery.error, "Failed to load receive records")}
+                    {getApiErrorMessage(releasesQuery.error, "Failed to load release records")}
                   </td>
                 </tr>
               ) : rows.length === 0 ? (
                 <tr>
                   <td colSpan={9} className="px-5 py-10 text-center text-gray-500">
-                    No receive records yet.
+                    No release records.
                   </td>
                 </tr>
               ) : (
                 rows.map((row) => (
-                  <tr key={row.QuarantineReceiveNo} className="hover:bg-gray-50/50 transition-colors">
+                  <tr key={row.ReceiveNo} className="hover:bg-gray-50/50 transition-colors">
                     <td className="px-5 py-3.5 font-mono text-xs whitespace-nowrap">
                       <button
                         type="button"
-                        onClick={() => setDetailId(row.QuarantineReceiveNo)}
+                        onClick={() => setDetailId(row.ReceiveNo)}
                         className="text-indigo-600 hover:text-indigo-700 hover:underline transition-colors"
                       >
-                        {row.QuarantineReceiveNo}
+                        {row.ReceiveNo}
                       </button>
                     </td>
                     <td className="px-5 py-3.5 text-gray-700">{row.PlantCode}</td>
                     <td className="px-5 py-3.5 text-gray-600 tabular-nums whitespace-nowrap">
-                      {formatDate(row.QuarantineReceiveDate)}
+                      {formatDate(row.ReceiveDate)}
                     </td>
-                    <td className="px-5 py-3.5 text-gray-700">{row.ReferenceNo || "—"}</td>
+                    <td className="px-5 py-3.5 text-gray-700 font-mono text-xs">{row.FgtnNo || "—"}</td>
+                    <td className="px-5 py-3.5 text-gray-700 font-mono text-xs">{row.QuarantineReceiveNo || "—"}</td>
                     <td className="px-5 py-3.5 text-gray-700">{row.Business || "—"}</td>
                     <td className="px-5 py-3.5 text-gray-600 tabular-nums">{row.Period}</td>
                     <td className="px-5 py-3.5">
                       <span
                         className={cn(
                           "inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium whitespace-nowrap",
-                          row.IsPaid
+                          row.Stored === "Y"
                             ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                             : "bg-gray-50 text-gray-600 border-gray-200"
                         )}
                       >
-                        {row.IsPaid ? "Paid" : "Unpaid"}
+                        {row.Stored === "Y" ? "Yes" : "No"}
                       </span>
                     </td>
                     <td className="px-5 py-3.5 text-gray-600">{row.CreateBy || "—"}</td>
-                    <td className="px-5 py-3.5 text-right">
-                      <div className="flex items-center justify-end gap-3">
-                        <Link
-                          href={`/inventory/receive/edit?id=${encodeURIComponent(row.QuarantineReceiveNo)}`}
-                          className="text-xs text-indigo-600 hover:text-indigo-700 font-medium transition-colors inline-flex items-center gap-1"
-                        >
-                          <Pencil className="size-3" />
-                          Edit
-                        </Link>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setDeleteError(null)
-                            setConfirmDelete(row)
-                          }}
-                          className="text-xs text-red-500 hover:text-red-600 font-medium transition-colors inline-flex items-center gap-1"
-                        >
-                          <Trash2 className="size-3" />
-                          Delete
-                        </button>
-                      </div>
-                    </td>
                   </tr>
                 ))
               )}
@@ -236,7 +188,7 @@ export default function ReceivePage() {
               <button
                 type="button"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page <= 1 || receivesQuery.isPending}
+                disabled={page <= 1 || releasesQuery.isPending}
                 className="h-7 px-2.5 rounded border border-gray-200 text-xs font-medium hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 ← Prev
@@ -247,7 +199,7 @@ export default function ReceivePage() {
               <button
                 type="button"
                 onClick={() => setPage((p) => Math.min(totalPage, p + 1))}
-                disabled={page >= totalPage || receivesQuery.isPending}
+                disabled={page >= totalPage || releasesQuery.isPending}
                 className="h-7 px-2.5 rounded border border-gray-200 text-xs font-medium hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 Next →
@@ -257,34 +209,21 @@ export default function ReceivePage() {
         )}
       </div>
 
-      {confirmDelete && (
-        <ConfirmDeleteDialog
-          item={confirmDelete}
-          isDeleting={deleteMutation.isPending}
-          error={deleteError}
-          onCancel={() => {
-            setConfirmDelete(null)
-            setDeleteError(null)
-          }}
-          onConfirm={() => handleDelete(confirmDelete)}
-        />
-      )}
-
       {detailId && (
-        <ReceiveDetailDialog id={detailId} onClose={() => setDetailId(null)} />
+        <ReleaseDetailDialog id={detailId} onClose={() => setDetailId(null)} />
       )}
     </div>
   )
 }
 
-// ─── Receive detail dialog ──────────────────────────────────────────────────
-function ReceiveDetailDialog({ id, onClose }: { id: string; onClose: () => void }) {
-  const detailQuery = useReceive(id)
+// ─── Release detail dialog ─────────────────────────────────────────────────
+function ReleaseDetailDialog({ id, onClose }: { id: string; onClose: () => void }) {
+  const detailQuery = useRelease(id)
   const master = detailQuery.data?.master
   const items = detailQuery.data?.items ?? []
 
   const totalQty = items.reduce((s, i) => s + (i.Quantity ?? 0), 0)
-  const totalValue = items.reduce((s, i) => s + (i.Quantity ?? 0) * (i.CostPrice ?? 0), 0)
+  const totalReturn = items.reduce((s, i) => s + (i.ReturnQuantity ?? 0), 0)
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-6">
@@ -293,7 +232,7 @@ function ReceiveDetailDialog({ id, onClose }: { id: string; onClose: () => void 
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 shrink-0">
           <div>
-            <h3 className="text-sm font-semibold text-gray-900">Receive Details</h3>
+            <h3 className="text-sm font-semibold text-gray-900">Release Details</h3>
             <p className="text-xs text-gray-500 mt-0.5 font-mono">{id}</p>
           </div>
           <button
@@ -315,7 +254,7 @@ function ReceiveDetailDialog({ id, onClose }: { id: string; onClose: () => void 
             </div>
           ) : detailQuery.isError ? (
             <div className="px-5 py-10 text-center text-red-600 text-sm">
-              {getApiErrorMessage(detailQuery.error, "Failed to load receive details")}
+              {getApiErrorMessage(detailQuery.error, "Failed to load release details")}
             </div>
           ) : (
             <>
@@ -326,19 +265,18 @@ function ReceiveDetailDialog({ id, onClose }: { id: string; onClose: () => void 
                     {[
                       ["Plant", master.PlantCode],
                       ["Store", master.StoreCode],
-                      ["Receive Date", formatDate(master.QuarantineReceiveDate)],
+                      ["Receive Date", formatDate(master.ReceiveDate)],
                       ["Period", master.Period],
-                      ["Supplier", String(master.SupplierId ?? "—")],
-                      ["Reference No", master.ReferenceNo || "—"],
-                      ["Reference Date", formatDate(master.ReferenceDate)],
+                      ["FGTN No", master.FgtnNo || "—"],
+                      ["QC Receive No", master.QuarantineReceiveNo || "—"],
                       ["Business", master.Business || "—"],
                       ["Returned", master.Returned || "—"],
-                      ["FGTN No", master.FgtnNo || "—"],
+                      ["Mushok", master.Mushok || "—"],
+                      ["Stored", master.Stored === "Y" ? "Yes" : "No"],
                       ["Created By", master.CreateBy || "—"],
                       ["Create Date", formatDate(master.CreateDate)],
                       ["Edited By", master.EditBy || "—"],
                       ["Edit Date", formatDate(master.EditDate)],
-                      ["Paid", master.IsPaid ? "Yes" : "No"],
                       ["Comment", master.Comment || "—"],
                     ].map(([label, value]) => (
                       <div key={label}>
@@ -369,48 +307,31 @@ function ReceiveDetailDialog({ id, onClose }: { id: string; onClose: () => void 
                         <th className="text-left px-3 py-2 font-semibold text-gray-600 uppercase tracking-wide whitespace-nowrap">Product</th>
                         <th className="text-left px-3 py-2 font-semibold text-gray-600 uppercase tracking-wide whitespace-nowrap">Variant</th>
                         <th className="text-left px-3 py-2 font-semibold text-gray-600 uppercase tracking-wide whitespace-nowrap">Batch No</th>
-                        <th className="text-right px-3 py-2 font-semibold text-gray-600 uppercase tracking-wide">Qty</th>
-                        <th className="text-right px-3 py-2 font-semibold text-amber-700 uppercase tracking-wide whitespace-nowrap">Adj Qty</th>
-                        <th className="text-right px-3 py-2 font-semibold text-emerald-700 uppercase tracking-wide whitespace-nowrap">Released</th>
+                        <th className="text-right px-3 py-2 font-semibold text-indigo-700 uppercase tracking-wide">Qty</th>
                         <th className="text-right px-3 py-2 font-semibold text-rose-700 uppercase tracking-wide whitespace-nowrap">Returned</th>
-                        <th className="text-right px-3 py-2 font-semibold text-gray-600 uppercase tracking-wide whitespace-nowrap">Cost Price</th>
-                        <th className="text-right px-3 py-2 font-semibold text-indigo-700 uppercase tracking-wide whitespace-nowrap">Total</th>
-                        <th className="text-left px-3 py-2 font-semibold text-gray-600 uppercase tracking-wide">Status</th>
+                        <th className="text-left px-3 py-2 font-semibold text-gray-600 uppercase tracking-wide whitespace-nowrap">MFG Date</th>
+                        <th className="text-left px-3 py-2 font-semibold text-gray-600 uppercase tracking-wide whitespace-nowrap">Expire Date</th>
+                        <th className="text-left px-3 py-2 font-semibold text-gray-600 uppercase tracking-wide whitespace-nowrap">New Expire</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
                       {items.length === 0 ? (
                         <tr>
-                          <td colSpan={10} className="px-3 py-8 text-center text-gray-500">
+                          <td colSpan={8} className="px-3 py-8 text-center text-gray-500">
                             No items.
                           </td>
                         </tr>
                       ) : (
                         items.map((it, i) => (
-                          <tr key={`${it.ProductCode}-${it.VariantId}-${i}`} className="hover:bg-gray-50/60">
+                          <tr key={`${it.ProductCode}-${it.VariantId}-${it.BatchNo}-${i}`} className="hover:bg-gray-50/60">
                             <td className="px-3 py-2 font-mono text-gray-800">{it.ProductCode}</td>
                             <td className="px-3 py-2 text-gray-700">{it.VariantId ?? "—"}</td>
                             <td className="px-3 py-2 font-mono text-gray-700">{it.BatchNo || "—"}</td>
-                            <td className="px-3 py-2 text-right tabular-nums">{it.Quantity}</td>
-                            <td className="px-3 py-2 text-right tabular-nums text-amber-700">{it.AdjustmentQuantity ?? 0}</td>
-                            <td className="px-3 py-2 text-right tabular-nums text-emerald-700 font-medium">{it.ReleaseQuantity ?? 0}</td>
+                            <td className="px-3 py-2 text-right tabular-nums text-indigo-700 font-medium">{it.Quantity}</td>
                             <td className="px-3 py-2 text-right tabular-nums text-rose-700">{it.ReturnQuantity ?? 0}</td>
-                            <td className="px-3 py-2 text-right tabular-nums text-gray-700">৳{(it.CostPrice ?? 0).toLocaleString()}</td>
-                            <td className="px-3 py-2 text-right tabular-nums text-indigo-700 font-medium">
-                              ৳{((it.Quantity ?? 0) * (it.CostPrice ?? 0)).toLocaleString()}
-                            </td>
-                            <td className="px-3 py-2">
-                              <span
-                                className={cn(
-                                  "inline-flex items-center rounded-full border px-1.5 py-0.5 text-[10px] font-medium",
-                                  it.Status === "Y"
-                                    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                                    : "bg-gray-50 text-gray-600 border-gray-200"
-                                )}
-                              >
-                                {it.Status || "—"}
-                              </span>
-                            </td>
+                            <td className="px-3 py-2 text-gray-600 whitespace-nowrap">{formatDate(it.MFGDate)}</td>
+                            <td className="px-3 py-2 text-gray-600 whitespace-nowrap">{formatDate(it.ExpireDate)}</td>
+                            <td className="px-3 py-2 text-gray-600 whitespace-nowrap">{formatDate(it.NewExpireDate)}</td>
                           </tr>
                         ))
                       )}
@@ -419,10 +340,9 @@ function ReceiveDetailDialog({ id, onClose }: { id: string; onClose: () => void 
                       <tfoot>
                         <tr className="bg-gray-50 border-t border-gray-200 font-medium">
                           <td colSpan={3} className="px-3 py-2 text-right text-gray-600 uppercase tracking-wide text-[10px]">Total</td>
-                          <td className="px-3 py-2 text-right tabular-nums text-gray-900">{totalQty}</td>
-                          <td colSpan={4}></td>
-                          <td className="px-3 py-2 text-right tabular-nums text-indigo-700">৳{totalValue.toLocaleString()}</td>
-                          <td></td>
+                          <td className="px-3 py-2 text-right tabular-nums text-indigo-700">{totalQty}</td>
+                          <td className="px-3 py-2 text-right tabular-nums text-rose-700">{totalReturn}</td>
+                          <td colSpan={3}></td>
                         </tr>
                       </tfoot>
                     )}
@@ -442,74 +362,6 @@ function ReceiveDetailDialog({ id, onClose }: { id: string; onClose: () => void 
           >
             Close
           </button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function ConfirmDeleteDialog({
-  item,
-  isDeleting,
-  error,
-  onCancel,
-  onConfirm,
-}: {
-  item: ReceiveListItem
-  isDeleting: boolean
-  error: string | null
-  onCancel: () => void
-  onConfirm: () => void
-}) {
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-      <div
-        className="absolute inset-0 bg-black/40"
-        onClick={isDeleting ? undefined : onCancel}
-        aria-hidden
-      />
-      <div className="relative w-full max-w-md rounded-lg bg-white shadow-lg border border-gray-200">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-          <h3 className="text-sm font-semibold text-gray-900">Delete receive record</h3>
-          <button
-            type="button"
-            onClick={onCancel}
-            disabled={isDeleting}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <X className="size-4" />
-          </button>
-        </div>
-        <div className="px-5 py-4 space-y-3">
-          <p className="text-sm text-gray-600">
-            Are you sure you want to delete receive{" "}
-            <span className="font-medium text-gray-900">{item.QuarantineReceiveNo}</span>?
-            This action cannot be undone.
-          </p>
-          {error && (
-            <div className="rounded-md bg-red-50 border border-red-100 px-3 py-2 text-xs text-red-700">
-              {error}
-            </div>
-          )}
-          <div className="flex items-center justify-end gap-2 pt-2">
-            <button
-              type="button"
-              onClick={onCancel}
-              disabled={isDeleting}
-              className="h-8 px-3 rounded-md border border-gray-200 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-60"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={onConfirm}
-              disabled={isDeleting}
-              className="h-8 px-3 rounded-md bg-red-600 text-sm font-medium text-white hover:bg-red-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed inline-flex items-center gap-1.5"
-            >
-              {isDeleting && <Loader2 className="size-3.5 animate-spin" />}
-              Delete
-            </button>
-          </div>
         </div>
       </div>
     </div>

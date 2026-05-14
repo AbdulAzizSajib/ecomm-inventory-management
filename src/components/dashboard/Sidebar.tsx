@@ -19,6 +19,7 @@ import {
   ChevronDown,
   LogOut,
   Factory,
+  CalendarCheck,
   type LucideIcon,
   Settings,
 } from "lucide-react"
@@ -80,6 +81,7 @@ const navItems: NavItem[] = [
       { label: "Current Stock", href: "/report/current-stock" },
     ],
   },
+  { label: "Month Closing", href: "/month-close", icon: CalendarCheck },
   {
     label: "Settings",
     href: "/settings",

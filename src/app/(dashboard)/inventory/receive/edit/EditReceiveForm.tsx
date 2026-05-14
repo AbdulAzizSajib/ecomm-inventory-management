@@ -65,6 +65,8 @@ export function EditReceiveForm() {
     }
   }, [receiveQuery.data])
 
+  const master = receiveQuery.data?.master
+
   const {
     register,
     handleSubmit,
@@ -76,13 +78,13 @@ export function EditReceiveForm() {
   })
 
   useEffect(() => {
-    if (receiveQuery.data) {
+    if (master) {
       reset({
-        Comment: receiveQuery.data.Comment ?? "",
-        EditBy: receiveQuery.data.EditBy ?? "",
+        Comment: master.Comment ?? "",
+        EditBy: master.EditBy ?? "",
       })
     }
-  }, [receiveQuery.data, reset])
+  }, [master, reset])
 
   const addRow = () => {
     if (!newRow.ProductCode.trim()) {
@@ -185,7 +187,7 @@ export function EditReceiveForm() {
     )
   }
 
-  const rec = receiveQuery.data
+  const rec = master
 
   return (
     <div>

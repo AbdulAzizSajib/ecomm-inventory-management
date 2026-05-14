@@ -13,13 +13,23 @@ interface MessageResponse {
   message?: string
 }
 
+export interface GetReceivesParams {
+  page?: number
+  limit?: number
+  startDate?: string
+  endDate?: string
+}
+
 export async function getReceives(
-  page = 1,
-  limit = 10
+  params: GetReceivesParams = {}
 ): Promise<ReceiveListResponse> {
+  const { page = 1, limit = 10, startDate, endDate } = params
+  const query: Record<string, string | number> = { page, limit }
+  if (startDate) query.startDate = startDate
+  if (endDate) query.endDate = endDate
   const { data } = await apiClient.get<ReceiveListResponse>(
     endpoints.receive.base,
-    { params: { page, limit } }
+    { params: query }
   )
   return data
 }

@@ -42,16 +42,22 @@ export const endpoints = {
   },
   release: {
     base: "/release",
+    byId: (id: string) => `/release/${id}`,
   },
   stock: {
     statement: "/stock/stock-statement",
     current: "/stock/current-stock",
+  },
+  monthClose: {
+    base: "/month-close",
+    period: "/month-close/period",
   },
   order: {
     base: "/order",
     byId: (id: string) => `/order/${id}`,
     deliveryMen: "/order/delivery-man-list",
     statusUpdate: "/order/order-status-update",
+    tracking: "/site/order-tracking",
   },
   dashboard: {
     base: "/dashboard",

@@ -5,6 +5,7 @@ import type {
   DeliveryManListResponse,
   OrderListParams,
   OrderListResponse,
+  OrderTrackingResponse,
   UpdateOrderStatusPayload,
 } from "./types"
 
@@ -29,5 +30,15 @@ export async function updateOrderStatus(
   payload: UpdateOrderStatusPayload
 ): Promise<unknown> {
   const { data } = await apiClient.post(endpoints.order.statusUpdate, payload)
+  return data
+}
+
+export async function getOrderTracking(
+  saleCode: string
+): Promise<OrderTrackingResponse> {
+  const { data } = await apiClient.get<OrderTrackingResponse>(
+    endpoints.order.tracking,
+    { params: { sale_code: saleCode } }
+  )
   return data
 }

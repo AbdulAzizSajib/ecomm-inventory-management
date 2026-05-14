@@ -5,9 +5,21 @@ import { useQuery } from "@tanstack/react-query"
 import { getReceives } from "../api"
 import { receiveKeys } from "../keys"
 
-export function useReceives(page = 1, limit = 10) {
+interface UseReceivesParams {
+  page?: number
+  limit?: number
+  startDate?: string
+  endDate?: string
+}
+
+export function useReceives({
+  page = 1,
+  limit = 10,
+  startDate,
+  endDate,
+}: UseReceivesParams = {}) {
   return useQuery({
-    queryKey: receiveKeys.list(page, limit),
-    queryFn: () => getReceives(page, limit),
+    queryKey: receiveKeys.list({ page, limit, startDate, endDate }),
+    queryFn: () => getReceives({ page, limit, startDate, endDate }),
   })
 }

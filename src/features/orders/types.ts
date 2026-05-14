@@ -61,3 +61,37 @@ export interface UpdateOrderStatusPayload {
   status_id: number
   delivery_man_id?: string | number | null
 }
+
+export interface OrderTrackingItem {
+  ProductCode: string
+  ProductName: string
+  VariantId: number
+  SKU: string
+  BarCode: string
+  UnitPrice: number
+  Net: number
+  Quantity?: number
+}
+
+export interface OrderTrackingBillingAddress {
+  full_name: string
+  mobile: string
+  address: string
+}
+
+export interface OrderTrackingData {
+  IssueNo: string
+  IssueDate: string
+  CustomerCode: string
+  OrderStatus: string
+  ShippingCost: number
+  PaymentMethodId: number
+  BillingAddress: OrderTrackingBillingAddress
+  Items: OrderTrackingItem[]
+}
+
+export interface OrderTrackingResponse {
+  statusCode: number
+  message: string
+  data: OrderTrackingData
+}

@@ -1,5 +1,6 @@
 export const config = {
-  apiBaseUrl: "http://192.168.90.51:3000",
+  // apiBaseUrl: "http://192.168.90.51:3000",
+  apiBaseUrl: "https://ec.mis.digital/api2",
 } as const
 
 export const env = config

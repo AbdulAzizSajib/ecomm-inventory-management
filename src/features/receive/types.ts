@@ -30,18 +30,24 @@ export interface ReceiveListResponse {
 }
 
 export interface ReceiveDetailItem {
+  QuarantineReceiveNo?: string
   ProductCode: string
   VariantId?: number
   BatchNo: string
   Quantity: number
+  AdjustmentQuantity?: number
+  ReleaseQuantity?: number
+  ReturnQuantity?: number
   CostPrice?: number
-  CartonPack?: number
+  Status?: string
+  CartonPack?: string | number
   MFGDate?: string | null
   ExpireDate?: string | null
 }
 
-export interface ReceiveDetail extends ReceiveListItem {
-  items?: ReceiveDetailItem[]
+export interface ReceiveDetail {
+  master: ReceiveListItem
+  items: ReceiveDetailItem[]
 }
 
 export interface ProductSearchResult {

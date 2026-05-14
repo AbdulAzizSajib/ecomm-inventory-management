@@ -4,7 +4,7 @@ import Cookies from "js-cookie"
 import { AUTH_TOKEN_KEY, env } from "@/lib/config"
 
 export const apiClient = axios.create({
-  baseURL: `${env.apiBaseUrl}/api`,
+  baseURL: `${env.apiBaseUrl}/`,
   timeout: 20_000,
   headers: {
     "Content-Type": "application/json",
