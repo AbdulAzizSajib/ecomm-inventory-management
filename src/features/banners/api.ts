@@ -1,7 +1,11 @@
 import { apiClient } from "@/lib/api/client"
 import { endpoints } from "@/lib/api/endpoints"
 
-import type { Banner, CreateBannerRequest } from "./types"
+import type {
+  Banner,
+  CreateBannerRequest,
+  UpdateBannerRequest,
+} from "./types"
 
 interface MessageResponse {
   message?: string
@@ -57,6 +61,32 @@ export async function createBanner(
     endpoints.banner.base,
     form,
     { headers: { "Content-Type": "multipart/form-data" } }
+  )
+  return data ?? {}
+}
+
+export async function updateBanner(
+  payload: UpdateBannerRequest
+): Promise<MessageResponse> {
+  const form = new FormData()
+  form.append("Active", String(payload.Active))
+  form.append("StartDate", payload.StartDate)
+  form.append("EndDate", payload.EndDate)
+  if (payload.image) form.append("image", payload.image)
+
+  const { data } = await apiClient.put<MessageResponse>(
+    endpoints.banner.byId(payload.id),
+    form,
+    { headers: { "Content-Type": "multipart/form-data" } }
+  )
+  return data ?? {}
+}
+
+export async function deleteBanner(
+  id: number | string
+): Promise<MessageResponse> {
+  const { data } = await apiClient.delete<MessageResponse>(
+    endpoints.banner.byId(id)
   )
   return data ?? {}
 }

@@ -37,3 +37,32 @@ export const bannerFormSchema = z
   })
 
 export type BannerFormValues = z.infer<typeof bannerFormSchema>
+
+const optionalFileSchema =
+  typeof File === "undefined"
+    ? z.any().optional()
+    : z
+        .instanceof(File)
+        .refine(
+          (f) => f.size <= MAX_IMAGE_BYTES,
+          "Image must be 5 MB or smaller"
+        )
+        .refine(
+          (f) => ACCEPTED_IMAGE_TYPES.includes(f.type),
+          "Image must be JPG, PNG, WEBP, or GIF"
+        )
+        .optional()
+
+export const bannerUpdateFormSchema = z
+  .object({
+    StartDate: z.string().min(1, "Start date is required"),
+    EndDate: z.string().min(1, "End date is required"),
+    Active: z.boolean(),
+    image: optionalFileSchema,
+  })
+  .refine((v) => !v.StartDate || !v.EndDate || v.StartDate <= v.EndDate, {
+    message: "End date must be on or after start date",
+    path: ["EndDate"],
+  })
+
+export type BannerUpdateFormValues = z.infer<typeof bannerUpdateFormSchema>

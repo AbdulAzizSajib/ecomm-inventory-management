@@ -37,7 +37,8 @@ type DialogMode =
 function buildImageUrl(path: string | null | undefined): string | null {
   if (!path) return null
   if (/^https?:\/\//i.test(path)) return path
-  return `${env.apiBaseUrl}${path.startsWith("/") ? "" : "/"}${path}`
+  const base = (env as { assetBaseUrl?: string }).assetBaseUrl ?? env.apiBaseUrl
+  return `${base}${path.startsWith("/") ? "" : "/"}${path}`
 }
 
 export default function PlantPage() {

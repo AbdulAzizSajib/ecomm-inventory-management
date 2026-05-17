@@ -1,6 +1,8 @@
 export const config = {
   // apiBaseUrl: "http://192.168.90.51:3000",
   apiBaseUrl: "https://ec.mis.digital/api2",
+  // Base URL for static assets (images, uploads). Use host root when API is namespaced.
+  assetBaseUrl: "https://ec.mis.digital",
 } as const
 
 export const env = config
